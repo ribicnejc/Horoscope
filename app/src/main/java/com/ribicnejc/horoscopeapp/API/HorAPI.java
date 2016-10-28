@@ -41,6 +41,10 @@ public class HorAPI {
         return success;
     }
 
+    public HorAPI(String sunsign){
+        this.sunsign = sunsign;
+        new HoroscopeTask(this.sunsign).execute();
+    }
     private class HoroscopeTask extends AsyncTask<Void, Void, String>{
         String sign;
         String apiKey = "http://horoscope-api.herokuapp.com/horoscope/today/";
@@ -54,7 +58,7 @@ public class HorAPI {
             String queryReturn;
             String query;
             try{
-                query = apiKey + sign;
+                query = apiKey + sunsign;
                 queryReturn = sendQuery(query);
                 ParseJSON(queryReturn);
             }catch (Exception e){

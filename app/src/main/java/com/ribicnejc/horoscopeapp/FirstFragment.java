@@ -3,11 +3,15 @@ package com.ribicnejc.horoscopeapp;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.ribicnejc.horoscopeapp.API.HorAPI;
 
 public class FirstFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -49,6 +53,10 @@ public class FirstFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        HorAPI horAPI = new HorAPI("Libra");
+        waitForApi(horAPI);
+
+
         return inflater.inflate(R.layout.fragment_first, container, false);
     }
 
@@ -80,4 +88,22 @@ public class FirstFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    private void waitForApi(final HorAPI api){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (api.isSuccess()){
+                    onApiSuccess(api);
+                }else{
+                    waitForApi(api);
+                }
+            }
+        }, 100);
+    }
+    private void onApiSuccess(HorAPI api){
+        Toast.makeText(getContext(), api.getHoroscope(), Toast.LENGTH_LONG).show();
+    }
+
 }
